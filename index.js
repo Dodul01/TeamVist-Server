@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 app.use(cors())
@@ -34,7 +34,39 @@ async function run() {
             res.send(result);
         })
 
-       
+
+        app.get('/users', async (req, res) => {
+            let query = {};
+
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+
+            const cursor = usersCollection.find(query);
+            const result = await cursor.toArray();
+
+            res.send(result);
+        })
+
+
+        app.put('/users', async (req, res) => {
+            const userInfo = req.body.data;
+            const verifyData = req.body.isVerifyed;
+            const id = userInfo._id;
+
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateUser = {
+                $set: {
+                    isVerifyed: verifyData
+                }
+            };
+
+            const result = await usersCollection.updateOne(filter, updateUser, options);
+            res.send(result);
+        })
+
+        
 
 
         // Send a ping to confirm a successful connection
