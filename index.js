@@ -28,6 +28,7 @@ async function run() {
         const usersCollection = database.collection("users")
         const tasksCollection = database.collection("tasks")
         const paymentCollection = database.collection("paymentInfo")
+        const firedCollection = database.collection("firedEmployees")
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -57,6 +58,7 @@ async function run() {
 
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
+
             const updateUser = {
                 $set: {
                     isVerifyed: verifyData
@@ -100,14 +102,39 @@ async function run() {
             const email = req.query.email;
             let query = {};
 
-            if(req.query.email){
-                query = {email : email}
+            if (req.query.email) {
+                query = { email: email }
             }
 
             const cursor = paymentCollection.find(query)
             const result = await cursor.toArray();
 
             res.send(result)
+        })
+
+        app.put('/makeHR', async (req, res) => {
+            const userInfo = req.body.user;
+            const makeHR = req.body.userRole;
+            const id = userInfo._id;
+
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            console.log(req.body);
+
+            const updateUser = {
+                $set: {
+                    userRole: makeHR
+                }
+            }
+
+            const result = await usersCollection.updateOne(filter, updateUser, options)
+            console.log(result);
+            res.send(result)
+        })
+
+
+        app.post('/firedList', async (req, res) => {
+
         })
 
 
