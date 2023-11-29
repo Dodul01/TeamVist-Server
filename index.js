@@ -134,9 +134,17 @@ async function run() {
 
 
         app.post('/firedList', async (req, res) => {
+            const userData = req.body;
+            const result = await firedCollection.insertOne(userData);
 
+            res.send(result);
         })
 
+
+        app.get('/firedList', async (req, res) => {
+            const result = await firedCollection.find().toArray();
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         // await client.db("admin").command({ ping: 1 });
