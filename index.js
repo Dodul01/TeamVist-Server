@@ -26,7 +26,7 @@ async function run() {
 
         const database = client.db("teamVista")
         const usersCollection = database.collection("users")
-
+        const tasksCollection = database.collection("tasks")
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -66,6 +66,27 @@ async function run() {
             res.send(result);
         })
 
+        app.post('/tasks', async (req, res) => {
+            const task = req.body;
+            const result = await tasksCollection.insertOne(task);
+
+            res.send(result);
+        })
+
+        app.get('/getTask', async (req, res) => {
+            const email = req.query?.email;
+
+            let query = {};
+
+            if(req.query?.email){
+                query = {userEmail : req.query?.email}
+            }
+
+            const cursor = tasksCollection.find(query);
+            const result = await cursor.toArray();
+
+            res.send(result)
+        })
         
 
 
