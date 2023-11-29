@@ -27,6 +27,7 @@ async function run() {
         const database = client.db("teamVista")
         const usersCollection = database.collection("users")
         const tasksCollection = database.collection("tasks")
+        const paymentCollection = database.collection("paymentInfo")
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -78,8 +79,8 @@ async function run() {
 
             let query = {};
 
-            if(req.query?.email){
-                query = {userEmail : req.query?.email}
+            if (req.query?.email) {
+                query = { userEmail: req.query?.email }
             }
 
             const cursor = tasksCollection.find(query);
@@ -87,7 +88,13 @@ async function run() {
 
             res.send(result)
         })
-        
+
+        app.post('/paymentInfo', async (req, res) => {
+            const payment = req.body;
+            const result = await paymentCollection.insertOne(payment);
+            
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
