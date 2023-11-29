@@ -92,7 +92,21 @@ async function run() {
         app.post('/paymentInfo', async (req, res) => {
             const payment = req.body;
             const result = await paymentCollection.insertOne(payment);
-            
+
+            res.send(result)
+        })
+
+        app.get('/paymentInfo', async (req, res) => {
+            const email = req.query.email;
+            let query = {};
+
+            if(req.query.email){
+                query = {email : email}
+            }
+
+            const cursor = paymentCollection.find(query)
+            const result = await cursor.toArray();
+
             res.send(result)
         })
 
