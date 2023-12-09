@@ -13,6 +13,6 @@ The TeamVista Server Repository serves as the backbone for the Employee Manageme
 - Salary Details
 
 ## Technology Stack
--Node.js
--Express.js
--MongoDB 
+-NodeJS
+-ExpressJS
+-MongoDB
